@@ -1,0 +1,10 @@
+dt 0.0005
+Nt 10000
+N_output 1000
+
+dx 0.5
+Nx 512
+
+u(outside) 0.01
+
+End
