@@ -25,7 +25,7 @@ int main(){
     Eigen::MatrixXd u_old = Eigen::MatrixXd::Zero(Nx,Nx);
 
     Initial ini;
-    ini.set_type1(u_old); // type1: random
+    ini.set_type1(u_old, clc.initial_amp); // type1: random
 
     shs.round_boundary(u_old, clc.u_outside); //setting round boundary condition
 

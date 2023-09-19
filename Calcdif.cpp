@@ -22,7 +22,9 @@ void Calcdif::readinput(){
 	fin >> dummy; fin >> N_output; std::cout << "N_output: " << N_output << std::endl;
 	
 	fin >> dummy; fin >> dx; std::cout << "dx: " << dx << std::endl;
-	fin >> dummy; fin >> Nx; std::cout << "Nx: " << Nx << std::endl;
+	fin >> dummy; fin >> dx; std::cout << "dx: " << dx << std::endl;
+
+	fin >> dummy; fin >> initial_amp; std::cout << "initial amplitude: " << initial_amp << std::endl;
 	
 	fin >> dummy; fin >> u_outside; std::cout << "u(outside): " << u_outside << std::endl;
 

@@ -124,6 +124,7 @@ void SHsimulate::output_energy(int step, double energy, const char* filename, Ca
 		ofs << "N_output: " << clc.N_output << std::endl;
 		ofs << "dx: " << clc.dx << std::endl;
 		ofs << "Nx: " << clc.Nx << std::endl;
+        ofs << "initial_amp: " << clc.initial_amp << std::endl; 
 		ofs << "STEP,ENERGY" << std::endl;
 	}
 	ofs << step << "," << energy << std::endl;
