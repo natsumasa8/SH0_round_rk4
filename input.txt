@@ -5,6 +5,5 @@ N_output 1000
 dx 0.5
 Nx 512
 
-u(outside) 0.01
-
+u(outside) 0.0
 End
