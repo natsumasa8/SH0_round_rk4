@@ -25,7 +25,7 @@ int main(){
     Eigen::MatrixXd u_old = Eigen::MatrixXd::Zero(Nx,Nx);
 
     Initial ini;
-    ini.set_type1(u_old);
+    ini.set_type1(u_old, clc.initial_amp); // type1: random
 
     shs.round_boundary(u_old, clc.u_outside); //setting round boundary condition
 
@@ -33,7 +33,7 @@ int main(){
 
         u = shs.CalcSH(u_old,clc);
 
-        shs.round_boundary(u_old, clc.u_outside); //setting round boundary condition
+        shs.round_boundary(u, clc.u_outside); //setting round boundary condition
         
         if(n%clc.N_output==0 || n==1){
             //calculation of gradient

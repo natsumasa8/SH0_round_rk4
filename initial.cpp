@@ -37,15 +37,15 @@
 // }
 
 //random-------------------------------------------------------
-void Initial::set_type1(Eigen::MatrixXd& s){
+void Initial::set_type1(Eigen::MatrixXd& s, double amplitude){
 	std::random_device rd;
 	std::mt19937 mt(rd());
-	std::uniform_real_distribution<double> rand001(-0.01,0.01);
+	std::uniform_real_distribution<double> rand001(-1.0,1.0);
 
 #pragma omp parallel for
     for(int i=0;i<s.rows();i++){
 		for(int j=0;j<s.rows();j++){
-			s(i,j) += rand001(mt);
+			s(i,j) += amplitude * rand001(mt);
 		}
 	}
 }

@@ -15,6 +15,7 @@ public:
     int N_output;
     double dx;
     int Nx;
+    double initial_amp;
     double u_outside;
 
     void readinput();

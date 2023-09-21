@@ -8,7 +8,7 @@ class Initial
 
 	public:
 	void readinitial();
-	void set_type1(Eigen::MatrixXd& s); //random
+	void set_type1(Eigen::MatrixXd& s, double amplitude); //random
 	void set_type2(Eigen::MatrixXd& s, int X, int Y, int r); //vortex
 	// void set_type3(); //orientation
 	void set_boundary(int r, Eigen::MatrixXd& s);
