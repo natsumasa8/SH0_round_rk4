@@ -53,7 +53,7 @@ void Initial::set_type1(Eigen::MatrixXd& s, double a){
 	}
 }
 //vortex-------------------------------------------------------
-void Initial::set_type2(Eigen::MatrixXd& s, int X, int Y, int r){
+void Initial::set_type2(Eigen::MatrixXd& s, int X, int Y){
 	//note : r is pixels not real distance
 #pragma omp parallel for
 	for(int i=0;i<s.rows();i++){
@@ -67,12 +67,12 @@ void Initial::set_type2(Eigen::MatrixXd& s, int X, int Y, int r){
 }
 
 //後で
-// void Initial::Constract(){
-// 	if(type=='type1'){
-// 		set_type1();
-// 	}elseif(type=='type2'){
-// 		set_type2();
-// 	}elseif(type=='type3'){
-// 		set_type3();
-// 	}
-// }
+void Initial::Constract(Eigen::MatrixXd& s){
+	if(type=="type1"){
+		set_type1(s, amplitude);
+	}else if(type=="type2"){
+		for (int i=0;i<defect_num;i++){
+			set_type2(s, X[i], Y[i]);
+		}
+	}
+}

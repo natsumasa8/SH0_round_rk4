@@ -7,13 +7,13 @@ class Initial
 	std::string type; //type1:random, type2:vortex
 	int defect_num;
 	int X[4], Y[4];
-	double r;
+	int r;
 	double amplitude;
 
 	public:
 	void readinitial();
 	void set_type1(Eigen::MatrixXd& s, double amplitude); //random
-	void set_type2(Eigen::MatrixXd& s, int X, int Y, int r); //vortex
-	// void Constract();
+	void set_type2(Eigen::MatrixXd& s, int X, int Y); //vortex
+	void Constract(Eigen::MatrixXd& s);
 };
 #endif
