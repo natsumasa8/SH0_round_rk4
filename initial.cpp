@@ -69,7 +69,7 @@ void Initial::set_type2(Eigen::MatrixXd& s, int X, int Y, int r){
 //boundary-------------------------------------------------------
 void Initial::set_boundary(int r, Eigen::MatrixXd& s){
 	//note : r is pixels not real distance
-//#pragma omp parallel for	
+#pragma omp parallel for	
     for(int i=0;i<s.rows();i++){
         for(int j=0;j<s.rows();j++){
             // メッシュ座標から円の中心までの距離を計算
