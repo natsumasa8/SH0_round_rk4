@@ -1,3 +1,11 @@
-type type1
+type type2
+
+defect_number 4
+position1 
+position2
+position3
+position4
+r
+amplitude
 
 End
