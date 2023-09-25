@@ -45,6 +45,7 @@ Eigen::MatrixXd SHsimulate::CalcSH(Eigen::MatrixXd& s, Calcdif& clc){
             
             tmp(p,q) *= clc.dt;
             tmp(p,q) += s(p,q);
+            // tmp(p,q) += rand; //gaussian white noise ?? every time? 
         }
     }
     return tmp;
@@ -89,12 +90,13 @@ void SHsimulate::round_boundary(Eigen::MatrixXd& s, double b){
 //エネルギー密度
 Eigen::MatrixXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y, Calcdif& clc){
     Eigen::MatrixXd tmp = Eigen::MatrixXd::Zero(clc.Nx,clc.Nx);
+#pragma omp paralle for
 	for (int i=0;i<clc.Nx;i++){
         for (int j=0;j<clc.Nx;j++){
             tmp(i,j) += c * std::pow(s(i,j),4.0) / 4.0;
             tmp(i,j) += b * std::pow(s(i,j),3.0) / 3.0;
             tmp(i,j) += a * std::pow(s(i,j),2.0) / 2.0;
-			tmp(i,j) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0;
+			tmp(i,j) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0; //この/2がダメなのか？？
 			tmp(i,j) += std::pow(clc.laplacian(i,j,s),2.0) / 2.0;
         }        
     }
