@@ -103,6 +103,17 @@ Eigen::MatrixXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Ei
 	return tmp;
 }
 
+//エネルギー密度（各項）
+Eigen::VectorXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y){
+    Eigen::VectorXd ene_every= Eigen::Vector::Zero(5);
+    #pragma parallel for 
+    for (int i=0;i<clc.Nx;i++){
+        for (int j=0;j<clc.Nx;j++){
+            
+        }
+    }
+}
+
 //エネルギー積分（Riemann積分）
 double SHsimulate::CalcE(Eigen::MatrixXd& s, Calcdif& clc){
 	double sum = 0.0;
