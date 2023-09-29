@@ -51,6 +51,16 @@ Eigen::MatrixXd SHsimulate::CalcSH(Eigen::MatrixXd& s, Calcdif& clc){
     return tmp;
 }
 
+//runge kutta 4 version
+// Eigen::MatrixXd SHsimulate::CalcSH_rk4(Eigen::MatrixXd& s){
+// #pragma omp parallel for
+//     for (int i=0;i<clc.Nx;i++){
+//         for (int j=0;j<clc.Nx;j++){
+
+//         }
+//     }
+// }
+
 //初期緩和計算用
 //note: clc -> s.row() etc...
 Eigen::MatrixXd SHsimulate::CalcRX(Eigen::MatrixXd& s, Calcdif& clc){
@@ -96,22 +106,28 @@ Eigen::MatrixXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Ei
             tmp(i,j) += c * std::pow(s(i,j),4.0) / 4.0;
             tmp(i,j) += b * std::pow(s(i,j),3.0) / 3.0;
             tmp(i,j) += a * std::pow(s(i,j),2.0) / 2.0;
-			tmp(i,j) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0; //この/2がダメなのか？？
+			tmp(i,j) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0;
 			tmp(i,j) += std::pow(clc.laplacian(i,j,s),2.0) / 2.0;
         }        
     }
 	return tmp;
 }
 
-//エネルギー密度（各項）
-Eigen::VectorXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y){
-    Eigen::VectorXd ene_every= Eigen::Vector::Zero(5);
-    #pragma parallel for 
+//エネルギー密度（各項）//Eigen::Matrixの書き方良いのか？
+Eigen::MatrixXd SHsimulate::CalcED_term(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y){
+    Eigen::Matrix<Eigen::VectorXd, s.rows(), s.rows()> energy_term;
+#pragma parallel for 
     for (int i=0;i<clc.Nx;i++){
         for (int j=0;j<clc.Nx;j++){
-            
+
+            energy_term(i,j)(0) += c * std::pow(s(i,j),4.0) / 4.0;
+            energy_term(i,j)(1) += b * std::pow(s(i,j),3.0) / 3.0;
+            energy_term(i,j)(2) += a * std::pow(s(i,j),2.0) / 2.0;
+			energy_term(i,j)(3) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0;
+			energy_term(i,j)(4) += std::pow(clc.laplacian(i,j,s),2.0) / 2.0;
         }
     }
+    return energy_term;
 }
 
 //エネルギー積分（Riemann積分）

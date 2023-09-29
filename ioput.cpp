@@ -5,6 +5,7 @@
 #include "Calcdif.h"
 
 Eigen::MatrixXd IOput::input_csv(char* filename){
+//This function reads a CSV File and converts it to the Eigen::MatrixXd.
 	std::ifstream ifs(filename);
 	if (!ifs){
 		std::cout << "ioput.cpp:input_csv error: unabel to open " << filename << "." << std::endl;
@@ -44,7 +45,7 @@ void IOput::output(Eigen::MatrixXd s, Eigen::MatrixXd s_theta, Eigen::MatrixXd s
 		std::cout << "ioput.cpp:output error: unable to open " << filename << "." << std::endl;
 	}
 	ofs << "# vtk DataFile Version 3.0" << std::endl;
-	ofs << "SH2vortex" << std::endl;
+	ofs << "SH0_round_boundary" << std::endl;
 	ofs << "ASCII" << std::endl;
 	ofs << "DATASET STRUCTURED_POINTS" << std::endl;
 	ofs << "DIMENSIONS " << Nx << " " << Nx << " " << 1 << std::endl; //Nx * Nx
@@ -84,4 +85,34 @@ void IOput::output_csv(Eigen::MatrixXd s, char* filename){
 	}
 	std::cout << "csv: " << filename << std::endl;
 	ofs.close();
+}
+
+Eigen::MatrixXd IOput::read_vtk(filename){
+//This function reads the vtk file and converts it to an Eigen::MatirxXd.
+	std::ifstream fin(filename);
+	if (!ifs){
+		std::cout << "ioput.cpp:read_vtk error: unabel to open " << filename << "." << std::endl;
+	}
+	Eigen::MatrixXd laodMatrix;
+	std::string line, dummy;
+	int rows = 0;
+	for (int i=0;i<8;i++){
+		fin >> dummy;
+	}
+
+	while (std::getline(fin, line)){
+		std::stringstream ss(line);
+		double value;
+		int cols = 0;
+
+		while (ss >> value){
+			if (cols == 0){
+				laodMatrix.conservativeResize(rows + 1, line.size());
+			}
+			laodMatrix(rows, cols) = value;
+			++cols;
+		}
+		++rows;
+	}
+	fin.close();
 }
