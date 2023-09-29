@@ -1,4 +1,4 @@
-dt 0.0005
+dt 0.00005
 Nt 2000000
 N_output 10000
 
@@ -11,4 +11,4 @@ u(outside) 0.1
 
 End
 
-//0.0005 -> increasing
+//0.00005 -> increasing
