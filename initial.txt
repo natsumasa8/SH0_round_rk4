@@ -9,3 +9,9 @@ r
 amplitude
 
 End
+
+type type1
+
+amplitude 0.1
+
+End

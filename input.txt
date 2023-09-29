@@ -10,3 +10,5 @@ initial_amp 0
 u(outside) 0.1
 
 End
+
+//0.0005 -> increasing
