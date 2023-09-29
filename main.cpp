@@ -31,7 +31,7 @@ int main(){
 
     for(int n=1;n<=clc.Nt;n++){
 
-        u = shs.CalcSH(u_old,clc);
+        u = shs.CalcSH_rk4(u_old,clc);
 
         shs.round_boundary(u, clc.u_outside); //setting round boundary condition
         

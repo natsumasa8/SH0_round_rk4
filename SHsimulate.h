@@ -14,8 +14,8 @@ private:
 
 public:
     void ConstractParameters();
-    Eigen::MatrixXd CalcSH(Eigen::MatrixXd& s, Calcdif& clc);
-    Eigen::MatrixXd CalcRX(Eigen::MatrixXd& s, Calcdif& clc);
+    Eigen::MatrixXd SH_rt(Eigen::MatrixXd& s, Calcdif& clc); //Calculating right terms
+    Eigen::MatrixXd CalcSH_rk4(Eigen::MatrixXd& s, Calcdif& clc);
     void round_boundary(Eigen::MatrixXd& s, double b);
     Eigen::MatrixXd CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y, Calcdif& clc); //Energy density
     Eigen::MatrixXd CalcED_term(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y);//energy density(term)
