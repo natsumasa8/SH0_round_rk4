@@ -114,21 +114,21 @@ Eigen::MatrixXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Ei
 }
 
 //エネルギー密度（各項）//Eigen::Matrixの書き方良いのか？
-Eigen::MatrixXd SHsimulate::CalcED_term(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y){
-    Eigen::Matrix<Eigen::VectorXd, s.rows(), s.rows()> energy_term;
-#pragma parallel for 
-    for (int i=0;i<clc.Nx;i++){
-        for (int j=0;j<clc.Nx;j++){
+// Eigen::MatrixXd SHsimulate::CalcED_term(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y, Calcdif& clc){
+//     Eigen::Matrix<Eigen::VectorXd, s.rows(), s.rows()> energy_term;
+// #pragma parallel for 
+//     for (int i=0;i<clc.Nx;i++){
+//         for (int j=0;j<clc.Nx;j++){
 
-            energy_term(i,j)(0) += c * std::pow(s(i,j),4.0) / 4.0;
-            energy_term(i,j)(1) += b * std::pow(s(i,j),3.0) / 3.0;
-            energy_term(i,j)(2) += a * std::pow(s(i,j),2.0) / 2.0;
-			energy_term(i,j)(3) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0;
-			energy_term(i,j)(4) += std::pow(clc.laplacian(i,j,s),2.0) / 2.0;
-        }
-    }
-    return energy_term;
-}
+//             energy_term(i,j)(0) += c * std::pow(s(i,j),4.0) / 4.0;
+//             energy_term(i,j)(1) += b * std::pow(s(i,j),3.0) / 3.0;
+//             energy_term(i,j)(2) += a * std::pow(s(i,j),2.0) / 2.0;
+// 			energy_term(i,j)(3) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0;
+// 			energy_term(i,j)(4) += std::pow(clc.laplacian(i,j,s),2.0) / 2.0;
+//         }
+//     }
+//     return energy_term;
+// }
 
 //エネルギー積分（Riemann積分）
 double SHsimulate::CalcE(Eigen::MatrixXd& s, Calcdif& clc){
