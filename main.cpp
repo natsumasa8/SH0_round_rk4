@@ -43,12 +43,13 @@ int main(){
             //calculation of energy(density)
             Eigen::MatrixXd energy_density = shs.CalcED(u, u_grad_x, u_grad_y, clc);                
             double energy = shs.CalcE(energy_density, clc);
+            Eigen::VectorXd energy_term = shs.CalcED_term(u, u_grad_x, u_grad_y, clc);
 
             //output ->vtk, txt
             char filename[100];
             sprintf(filename, "d%08d.vtk",n);
             ioput.output(u, u_theta, energy_density, filename);
-            shs.output_energy(n, energy, "energy.txt", clc);
+            shs.output_energy(n, energy, energy_term, "energy.txt", clc);
 
             std::cout << "step: " << n << ", enrgy: " << energy << std::endl;
         }
