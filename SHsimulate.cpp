@@ -5,7 +5,7 @@
 #include "SHsimulate.h"
 #include "Calcdif.h"
 
-void SHsimulate::ConstractParameters(){
+void SHsimulate::ConstructParameters(){
     std::cout << "Construct SH-parameters...put filepath below." << std::endl;
     std::cin >> FilePath;
 

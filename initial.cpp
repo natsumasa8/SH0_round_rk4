@@ -74,7 +74,7 @@ void Initial::set_type2(Eigen::MatrixXd& s, int X, int Y){
 	}
 }
 
-void Initial::set_type3(Eigen::MatrixXd& s, int X, int Y, int r){
+void Initial::set_type3(Eigen::MatrixXd& s, int X, int Y){
 	// r is pixel not real distance. spot ->> small 5~15??
 	std::random_device rd;
 	std::mt19937 mt(rd());
@@ -91,12 +91,19 @@ void Initial::set_type3(Eigen::MatrixXd& s, int X, int Y, int r){
 }
 
 //後で
-void Initial::Constract(Eigen::MatrixXd& s){
+void Initial::Construct(Eigen::MatrixXd& s){
 	if(type=="type1"){
 		set_type1(s);
 	}else if(type=="type2"){
 		for (int i=0;i<defect_num;i++){
 			set_type2(s, X[i], Y[i]);
 		}
+	}else if(type=="type3"){
+		for (int i=0;i<defect_num;i++){
+			set_type3(s, X[i], Y[i]);
+		}
+	}else {
+		std::cout << "Error:initial.cpp:Construct something goes wrong.." << std::endl;
+		exit(1);
 	}
 }

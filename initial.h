@@ -14,7 +14,7 @@ class Initial
 	void readinitial();
 	void set_type1(Eigen::MatrixXd& s); //random
 	void set_type2(Eigen::MatrixXd& s, int X, int Y); //vortex
-	void set_type3(Eigen::MatrixXd& s, int X, int Y, int r); //spot disturbance
-	void Constract(Eigen::MatrixXd& s);
+	void set_type3(Eigen::MatrixXd& s, int X, int Y); //spot disturbance
+	void Construct(Eigen::MatrixXd& s);
 };
 #endif
