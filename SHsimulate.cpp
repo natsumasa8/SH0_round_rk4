@@ -137,8 +137,8 @@ void SHsimulate::output_energy(int step, double energy, Eigen::VectorXd energy_t
 		ofs << "dx: " << clc.dx << std::endl;
 		ofs << "Nx: " << clc.Nx << std::endl;
         ofs << "initial_amp: " << clc.initial_amp << std::endl; 
-		ofs << "STEP,ENERGY,cu^3,bu^2,au,grad^2,L^2" << std::endl;
+		ofs << "STEP | ENERGY | cu^3 | bu^2 | au | -grad^2 | L^2" << std::endl;
 	}
-	ofs << step << "," << energy << "," << energy_term << std::endl;
+	ofs << step << " " << energy << " ||  " << energy_term(0) << " "<< energy_term(1) << " " << energy_term(2) << " " << energy_term(3) << " " << energy_term(4) << std::endl;
 	ofs.close();
 }
