@@ -9,9 +9,22 @@ r
 amplitude
 
 End
-
+-----------------------------
 type type1
 
 amplitude 0.1
 
 End
+-----------------------------
+type type3
+
+defect_number 4
+position1
+position2
+position3
+position4
+r
+amplitude
+
+End
+-----------------------------

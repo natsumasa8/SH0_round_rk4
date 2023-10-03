@@ -32,6 +32,7 @@ int main(){
     for(int n=1;n<=clc.Nt;n++){
 
         u = shs.CalcSH_rk4(u_old,clc);
+        //setting initial condition (spot disturbance)
 
         shs.round_boundary(u, clc.u_outside); //setting round boundary condition
         

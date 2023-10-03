@@ -12,8 +12,9 @@ class Initial
 
 	public:
 	void readinitial();
-	void set_type1(Eigen::MatrixXd& s, double amplitude); //random
+	void set_type1(Eigen::MatrixXd& s); //random
 	void set_type2(Eigen::MatrixXd& s, int X, int Y); //vortex
+	void set_type3(Eigen::MatrixXd& s, int X, int Y, int r); //spot disturbance
 	void Constract(Eigen::MatrixXd& s);
 };
 #endif
