@@ -5,8 +5,6 @@ N_output 10000
 dx 0.5
 Nx 512
 
-initial_amp 0
-
 u(outside) 0.1
 
 End

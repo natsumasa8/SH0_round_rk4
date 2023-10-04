@@ -13,7 +13,7 @@ private:
 //     Calcdif Cd;
 
 public:
-    void ConstractParameters();
+    void ConstructParameters();
     Eigen::MatrixXd SH_rt(Eigen::MatrixXd& s, Calcdif& clc); //Calculating right terms
     Eigen::MatrixXd CalcSH_rk4(Eigen::MatrixXd& s, Calcdif& clc);
     void round_boundary(Eigen::MatrixXd& s, double b);

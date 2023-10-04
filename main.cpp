@@ -11,7 +11,7 @@ int main(){
     clc.readinput();
 
     SHsimulate shs;
-    shs.ConstractParameters();
+    shs.ConstructParameters();
 
     const int Nx = clc.Nx;
     IOput ioput;
@@ -25,13 +25,14 @@ int main(){
     Eigen::MatrixXd u_old = Eigen::MatrixXd::Zero(Nx,Nx);
 
     Initial ini;
-    ini.set_type1(u_old, clc.initial_amp); // type1: random
-
+    // ini.set_type1(u_old, clc.initial_amp); // type1: random
+    ini.Construct(u_old);
     shs.round_boundary(u_old, clc.u_outside); //setting round boundary condition
 
     for(int n=1;n<=clc.Nt;n++){
 
         u = shs.CalcSH_rk4(u_old,clc);
+        //setting initial condition (spot disturbance)
 
         shs.round_boundary(u, clc.u_outside); //setting round boundary condition
         

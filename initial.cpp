@@ -19,16 +19,24 @@ void Initial::readinitial(){
 	std::string dummy, check;
 	fin >> dummy; fin >> type; std::cout << "type(initial condition): " << type << std::endl;
 	if(type=="type1"){
-		//no processing
+		fin >> dummy; fin >> amplitude; std::cout << "ampllitude: " << amplitude << std::endl;
 	}else if(type=="type2"){
+		fin >> dummy; fin >> defect_num; std::cout << "defect_number: " << defect_num << std::endl;
 		for(int i=0;i<defect_num;i++){
-		fin >> dummy; fin >> X[i] >> Y[i]; std::cout << "(X1,Y1): " << X[i] << " " << Y[i] << std::endl;
+		fin >> dummy; fin >> X[i] >> Y[i]; std::cout << "(X,Y): " << X[i] << " " << Y[i] << std::endl;
 		}
 		fin >> dummy; fin >> r; std::cout << "raduis: " << r << std::endl;
+		fin >> dummy; fin >> amplitude; std::cout << "ampllitude: " << amplitude << std::endl;
+	}else if(type=="type3"){
+		fin >> dummy; fin >> defect_num; std::cout << "defect_number: " << defect_num << std::endl;
+		for(int i=0;i<defect_num;i++){
+		fin >> dummy; fin >> X[i] >> Y[i]; std::cout << "(X,Y): " << X[i] << " " << Y[i] << std::endl;
+		}
+		fin >> dummy; fin >> r; std::cout << "raduis: " << r << std::endl;
+		fin >> dummy; fin >> amplitude; std::cout << "ampllitude: " << amplitude << std::endl;
 	}else{
 		std::cout << "Error: invalid input of 'type'." << std::endl;
 	}
-	fin >> dummy; fin >> amplitude; std::cout << "amplitude: " << amplitude << std::endl;
 
 	fin >> check;
 	if(check != "End"){
@@ -40,7 +48,7 @@ void Initial::readinitial(){
 }
 
 //random-------------------------------------------------------
-void Initial::set_type1(Eigen::MatrixXd& s, double a){
+void Initial::set_type1(Eigen::MatrixXd& s){
 	std::random_device rd;
 	std::mt19937 mt(rd());
 	std::uniform_real_distribution<double> rand001(-1.0,1.0);
@@ -48,7 +56,7 @@ void Initial::set_type1(Eigen::MatrixXd& s, double a){
 #pragma omp parallel for
     for(int i=0;i<s.rows();i++){
 		for(int j=0;j<s.rows();j++){
-			s(i,j) += a * rand001(mt);
+			s(i,j) += amplitude * rand001(mt);
 		}
 	}
 }
@@ -66,13 +74,36 @@ void Initial::set_type2(Eigen::MatrixXd& s, int X, int Y){
 	}
 }
 
+void Initial::set_type3(Eigen::MatrixXd& s, int X, int Y){
+	// r is pixel not real distance. spot ->> small 5~15??
+	std::random_device rd;
+	std::mt19937 mt(rd());
+	std::uniform_real_distribution<double> rand001(-1.0,1.0);
+#pragma omp parallel for
+	for(int i=0;i<s.rows();i++){
+		for(int j=0;j<s.rows();j++){
+			double distance = std::pow(i-X,2) + std::pow(j-Y,2);
+			if (((r-1)*(r-1))<= distance && distance<=((r+1)*(r+1))) {
+                s(i,j) = amplitude * rand001(mt);
+			}
+		}
+	}
+}
+
 //後で
-void Initial::Constract(Eigen::MatrixXd& s){
+void Initial::Construct(Eigen::MatrixXd& s){
 	if(type=="type1"){
-		set_type1(s, amplitude);
+		set_type1(s);
 	}else if(type=="type2"){
 		for (int i=0;i<defect_num;i++){
 			set_type2(s, X[i], Y[i]);
 		}
+	}else if(type=="type3"){
+		for (int i=0;i<defect_num;i++){
+			set_type3(s, X[i], Y[i]);
+		}
+	}else {
+		std::cout << "Error:initial.cpp:Construct something goes wrong.." << std::endl;
+		exit(1);
 	}
 }
