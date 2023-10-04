@@ -87,32 +87,32 @@ void IOput::output_csv(Eigen::MatrixXd s, char* filename){
 	ofs.close();
 }
 
-Eigen::MatrixXd IOput::read_vtk(filename){
-//This function reads the vtk file and converts it to an Eigen::MatirxXd.
-	std::ifstream fin(filename);
-	if (!ifs){
-		std::cout << "ioput.cpp:read_vtk error: unabel to open " << filename << "." << std::endl;
-	}
-	Eigen::MatrixXd laodMatrix;
-	std::string line, dummy;
-	int rows = 0;
-	for (int i=0;i<8;i++){
-		fin >> dummy;
-	}
+// Eigen::MatrixXd IOput::read_vtk(filename){
+// //This function reads the vtk file and converts it to an Eigen::MatirxXd.
+// 	std::ifstream fin(filename);
+// 	if (!ifs){
+// 		std::cout << "ioput.cpp:read_vtk error: unabel to open " << filename << "." << std::endl;
+// 	}
+// 	Eigen::MatrixXd laodMatrix;
+// 	std::string line, dummy;
+// 	int rows = 0;
+// 	for (int i=0;i<8;i++){
+// 		fin >> dummy;
+// 	}
 
-	while (std::getline(fin, line)){
-		std::stringstream ss(line);
-		double value;
-		int cols = 0;
+// 	while (std::getline(fin, line)){
+// 		std::stringstream ss(line);
+// 		double value;
+// 		int cols = 0;
 
-		while (ss >> value){
-			if (cols == 0){
-				laodMatrix.conservativeResize(rows + 1, line.size());
-			}
-			laodMatrix(rows, cols) = value;
-			++cols;
-		}
-		++rows;
-	}
-	fin.close();
-}
+// 		while (ss >> value){
+// 			if (cols == 0){
+// 				laodMatrix.conservativeResize(rows + 1, line.size());
+// 			}
+// 			laodMatrix(rows, cols) = value;
+// 			++cols;
+// 		}
+// 		++rows;
+// 	}
+// 	fin.close();
+// }

@@ -5,7 +5,7 @@
 #include "SHsimulate.h"
 #include "Calcdif.h"
 
-void SHsimulate::ConstractParameters(){
+void SHsimulate::ConstructParameters(){
     std::cout << "Construct SH-parameters...put filepath below." << std::endl;
     std::cin >> FilePath;
 
@@ -32,53 +32,36 @@ void SHsimulate::ConstractParameters(){
 }
 
 //note: clc -> s.row() etc...
-Eigen::MatrixXd SHsimulate::CalcSH(Eigen::MatrixXd& s, Calcdif& clc){
+Eigen::MatrixXd SHsimulate::SH_rt(Eigen::MatrixXd& s, Calcdif& clc){
     Eigen::MatrixXd tmp = Eigen::MatrixXd::Zero(clc.Nx,clc.Nx);
 #pragma omp parallel for
     for (int p=0;p<clc.Nx;p++){
+#pragma omp parallel for
         for (int q=0;q<clc.Nx;q++){
             tmp(p,q) += -clc.laplacian(p,q,s);
             tmp(p,q) += -clc.laplacian2(p,q,s);
             tmp(p,q) += -a * s(p,q);
             tmp(p,q) += -b * std::pow(s(p,q),2.0);
             tmp(p,q) += -c * std::pow(s(p,q),3.0);
-            
-            tmp(p,q) *= clc.dt;
-            tmp(p,q) += s(p,q);
-            // tmp(p,q) += rand; //gaussian white noise ?? every time? 
         }
     }
     return tmp;
 }
 
-//runge kutta 4 version
-// Eigen::MatrixXd SHsimulate::CalcSH_rk4(Eigen::MatrixXd& s){
-// #pragma omp parallel for
-//     for (int i=0;i<clc.Nx;i++){
-//         for (int j=0;j<clc.Nx;j++){
+Eigen::MatrixXd SHsimulate::CalcSH_rk4(Eigen::MatrixXd& s, Calcdif& clc){
+    Eigen::MatrixXd k1, k2, k3, k4;
+    Eigen::MatrixXd s_half1, s_half2, s_one;
+    double h = clc.dt;
 
-//         }
-//     }
-// }
+    k1 = SH_rt(s, clc); //傾き算出
+    s_half1 = s + k1 * h * 0.5; //交点
+    k2 = SH_rt(s_half1, clc);
+    s_half2 = s + k2 * h * 0.5;
+    k3 = SH_rt(s_half2, clc);
+    s_one = s + k3 * h;
+    k4 = SH_rt(s_one, clc);
 
-//初期緩和計算用
-//note: clc -> s.row() etc...
-Eigen::MatrixXd SHsimulate::CalcRX(Eigen::MatrixXd& s, Calcdif& clc){
-    Eigen::MatrixXd rx = Eigen::MatrixXd::Zero(clc.Nx,clc.Nx);
-#pragma omp parallel for
-    for (int p=0;p<clc.Nx;p++){
-        for (int q=0;q<clc.Nx;q++){
-            rx(p,q) += -clc.laplacian(p,q,s);
-            rx(p,q) += -clc.laplacian2(p,q,s);
-            rx(p,q) += -a * s(p,q);
-            rx(p,q) += -b * std::pow(s(p,q),2.0);
-            rx(p,q) += -c * std::pow(s(p,q),3.0);
-            
-            rx(p,q) *= clc.dt;
-            rx(p,q) += s(p,q);
-        }
-    }
-    return rx;
+    return s+h*(k1+2.0*k2+2.0*k3+k4)/6.0;
 }
 
 //round boundary condition
@@ -87,6 +70,7 @@ void SHsimulate::round_boundary(Eigen::MatrixXd& s, double b){
     double r = (double)s.rows() / 2.0 - 2.0;
 #pragma omp parallel for	
     for(int i=0;i<s.rows();i++){
+#pragma omp parallel for	
         for(int j=0;j<s.rows();j++){
             // メッシュ座標から円の中心までの距離を計算
             double distance = std::pow(i - s.rows()/2, 2) + std::pow(j - s.rows()/2, 2);
@@ -102,6 +86,7 @@ Eigen::MatrixXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Ei
     Eigen::MatrixXd tmp = Eigen::MatrixXd::Zero(clc.Nx,clc.Nx);
 #pragma omp paralle for
 	for (int i=0;i<clc.Nx;i++){
+#pragma omp parallel for	
         for (int j=0;j<clc.Nx;j++){
             tmp(i,j) += c * std::pow(s(i,j),4.0) / 4.0;
             tmp(i,j) += b * std::pow(s(i,j),3.0) / 3.0;
@@ -114,20 +99,18 @@ Eigen::MatrixXd SHsimulate::CalcED(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Ei
 }
 
 //エネルギー密度（各項）//Eigen::Matrixの書き方良いのか？
-Eigen::MatrixXd SHsimulate::CalcED_term(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y){
-    Eigen::Matrix<Eigen::VectorXd, s.rows(), s.rows()> energy_term;
-#pragma parallel for 
+Eigen::VectorXd SHsimulate::CalcED_term(Eigen::MatrixXd& s, Eigen::MatrixXd& gs_x, Eigen::MatrixXd& gs_y, Calcdif& clc){
+    Eigen::VectorXd energy_term = Eigen::VectorXd::Zero(5);
     for (int i=0;i<clc.Nx;i++){
         for (int j=0;j<clc.Nx;j++){
-
-            energy_term(i,j)(0) += c * std::pow(s(i,j),4.0) / 4.0;
-            energy_term(i,j)(1) += b * std::pow(s(i,j),3.0) / 3.0;
-            energy_term(i,j)(2) += a * std::pow(s(i,j),2.0) / 2.0;
-			energy_term(i,j)(3) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0;
-			energy_term(i,j)(4) += std::pow(clc.laplacian(i,j,s),2.0) / 2.0;
+            energy_term(0) += c * std::pow(s(i,j),4.0) / 4.0;
+            energy_term(1) += b * std::pow(s(i,j),3.0) / 3.0;
+            energy_term(2) += a * std::pow(s(i,j),2.0) / 2.0;
+			energy_term(3) -= (gs_x(i,j)*gs_x(i,j) + gs_y(i,j)*gs_y(i,j)) / 2.0;
+			energy_term(4) += std::pow(clc.laplacian(i,j,s),2.0) / 2.0;
         }
     }
-    return energy_term;
+    return energy_term * std::pow(clc.dx,2.0);
 }
 
 //エネルギー積分（Riemann積分）
@@ -142,7 +125,7 @@ double SHsimulate::CalcE(Eigen::MatrixXd& s, Calcdif& clc){
 	return sum;
 }
 
-void SHsimulate::output_energy(int step, double energy, const char* filename, Calcdif& clc){
+void SHsimulate::output_energy(int step, double energy, Eigen::VectorXd energy_term, const char* filename, Calcdif& clc){
 	std::ofstream ofs(filename, std::ios::app);
 	if(!ofs){
 		std::cout << "ioput.cpp:output_energy error: unable to open " << filename << "." << std::endl;
@@ -153,9 +136,8 @@ void SHsimulate::output_energy(int step, double energy, const char* filename, Ca
 		ofs << "N_output: " << clc.N_output << std::endl;
 		ofs << "dx: " << clc.dx << std::endl;
 		ofs << "Nx: " << clc.Nx << std::endl;
-        ofs << "initial_amp: " << clc.initial_amp << std::endl; 
-		ofs << "STEP,ENERGY" << std::endl;
+		ofs << "STEP | ENERGY | cu^3 | bu^2 | au | -grad^2 | L^2" << std::endl;
 	}
-	ofs << step << "," << energy << std::endl;
+	ofs << step << " " << energy << " ||  " << energy_term(0) << " "<< energy_term(1) << " " << energy_term(2) << " " << energy_term(3) << " " << energy_term(4) << std::endl;
 	ofs.close();
 }
