@@ -100,7 +100,7 @@ Eigen::MatrixXd Calcdif::grad_x(Eigen::MatrixXd& s){
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Nx;j++){
 			double tmp = s((i+1)%Nx,j) - s((i-1+Nx)%Nx,j);
-			tmp /= 2.0;
+			tmp /= 2.0 * dx;
 			g_x(i,j) = tmp;
 		}
 	}
@@ -112,7 +112,7 @@ Eigen::MatrixXd Calcdif::grad_y(Eigen::MatrixXd& s){
 	for(int i=0;i<Nx;i++){
 		for(int j=0;j<Nx;j++){
 			double tmp = s(i,(j+1)%Nx) - s(i,(j-1+Nx)%Nx);
-			tmp /= 2.0;
+			tmp /= 2.0 * dx;
 			g_y(i,j) = tmp;
 		}
 	}

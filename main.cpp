@@ -26,6 +26,7 @@ int main(){
 
     Initial ini;
     // ini.set_type1(u_old, clc.initial_amp); // type1: random
+    ini.readinitial();
     ini.Construct(u_old);
     shs.round_boundary(u_old, clc.u_outside); //setting round boundary condition
 

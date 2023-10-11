@@ -18,6 +18,7 @@ void Initial::readinitial(){
 //reading inputfile
 	std::string dummy, check;
 	fin >> dummy; fin >> type; std::cout << "type(initial condition): " << type << std::endl;
+
 	if(type=="type1"){
 		fin >> dummy; fin >> amplitude; std::cout << "ampllitude: " << amplitude << std::endl;
 	}else if(type=="type2"){
@@ -32,6 +33,7 @@ void Initial::readinitial(){
 		for(int i=0;i<defect_num;i++){
 		fin >> dummy; fin >> X[i] >> Y[i]; std::cout << "(X,Y): " << X[i] << " " << Y[i] << std::endl;
 		}
+		
 		fin >> dummy; fin >> r; std::cout << "raduis: " << r << std::endl;
 		fin >> dummy; fin >> amplitude; std::cout << "ampllitude: " << amplitude << std::endl;
 	}else{
@@ -83,7 +85,7 @@ void Initial::set_type3(Eigen::MatrixXd& s, int X, int Y){
 	for(int i=0;i<s.rows();i++){
 		for(int j=0;j<s.rows();j++){
 			double distance = std::pow(i-X,2) + std::pow(j-Y,2);
-			if (((r-1)*(r-1))<= distance && distance<=((r+1)*(r+1))) {
+			if (distance<=(r*r)) {
                 s(i,j) = amplitude * rand001(mt);
 			}
 		}
